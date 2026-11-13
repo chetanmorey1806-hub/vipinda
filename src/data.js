@@ -1,5 +1,6 @@
 // ─────────────────────────────────────────────────────────────
-//  Edit your links here — everything on the site reads from this file.
+//  Links, photos and other non-translated content.
+//  All page text (English / हिंदी / मराठी) lives in src/strings.js.
 // ─────────────────────────────────────────────────────────────
 export const CONTACT = {
   email: 'vipintatad7@gmail.com',
@@ -10,17 +11,8 @@ export const CONTACT = {
   spotifyEmbed: 'https://open.spotify.com/embed/artist/5sfLrbbZqY4qsqcXIETguR?utm_source=generator&theme=0',
 }
 
-export const NAV = [
-  { id: 'about', label: 'About' },
-  { id: 'music', label: 'Music' },
-  { id: 'credits', label: 'Credits' },
-  { id: 'press', label: 'Press' },
-  { id: 'gallery', label: 'Gallery' },
-  { id: 'philosophy', label: 'Philosophy' },
-  { id: 'contact', label: 'Contact' },
-]
-
-export const ROLES = ['Multilingual Rapper', 'Writer', 'Audio-Visual Storyteller']
+// section ids — labels come from strings.js (nav.*)
+export const NAV = ['about', 'music', 'credits', 'press', 'gallery', 'philosophy', 'contact']
 
 export const LANGUAGES = [
   { word: 'मराठी', label: 'Marathi' },
@@ -28,50 +20,9 @@ export const LANGUAGES = [
   { word: 'English', label: 'English' },
 ]
 
-export const GENRES = [
-  { title: 'Marathi Hip-Hop', note: 'Roots first. The mother tongue on the mic.' },
-  { title: 'Hindi Rap', note: 'Reaching wider, staying sharp.' },
-  { title: 'English Rap', note: 'Global language, local story.' },
-  { title: 'Conscious & Social Rap', note: 'Verses that question the structure.' },
-  { title: 'Storytelling Hip-Hop', note: 'Every verse a scene, every song a film.' },
-  { title: 'Experimental & Cinematic', note: 'Sound designed like a screenplay.' },
-  { title: 'Independent Projects', note: 'Music and visuals, built on his own terms.' },
-]
+export const BEYOND_ICONS = ['✎', '◉', '✂', '▣', '✦', '▶']
 
-export const CREDITS = [
-  {
-    tag: 'Bollywood Feature Film',
-    title: 'Jhund',
-    body:
-      'Directed by acclaimed filmmaker Nagraj Manjule, Jhund features rap contributions by Vipin Tatad — his involvement in a mainstream cinematic production.',
-  },
-  {
-    tag: 'Netflix Crime Docu-Series',
-    title: 'Murder In a Courtroom',
-    body:
-      'A collaborative title rap for the Netflix crime documentary series, bringing hip-hop expression into the world of documentary storytelling.',
-  },
-]
-
-export const BEYOND = [
-  { title: 'Music Production & Rap Writing', icon: '✎' },
-  { title: 'Audio-Visual Storytelling', icon: '◉' },
-  { title: 'Video Editing', icon: '✂' },
-  { title: 'Documentary & Cultural Documentation', icon: '▣' },
-  { title: 'Creative Direction', icon: '✦' },
-  { title: 'Cinematic Music Videos', icon: '▶' },
-]
-
-export const COLLABS = [
-  'Music Labels & Record Producers',
-  'Film & OTT Production Houses',
-  'Independent Artists & Musicians',
-  'Live Event Organizers',
-  'Cultural Organizations',
-  'Brands & Creative Agencies',
-  'Documentary Filmmakers',
-]
-
+// press headlines stay in their original language
 export const PRESS = [
   {
     outlet: 'Mumbai Mirror',
@@ -121,25 +72,27 @@ export const PRESS = [
   },
 ]
 
+// gallery photos — captions come from strings.js (gallery.caps), same order
 export const GALLERY = [
-  { src: '/images/stage-red.jpg', alt: 'Vipin Tatad performing under red stage lights', tall: true },
-  { src: '/images/mic-bw.jpg', alt: 'Black and white — Vipin on the mic' },
-  { src: '/images/crew.jpg', alt: 'Vipin with his crew on a smoky stage', tall: true },
-  { src: '/images/stage-nyf.jpg', alt: 'Live performance at a youth festival', tall: true },
-  { src: '/images/stage-blue.jpg', alt: 'Vipin mid-performance under blue light' },
-  { src: '/images/stage-white.jpg', alt: 'Vipin performing in white', tall: true },
-  { src: '/images/portrait-bw.jpg', alt: 'Black and white portrait of Vipin', tall: true },
-  { src: '/images/nagsen-festival.jpg', alt: 'Honoured at Nagsen Festival' },
-  { src: '/images/crowd-clap.jpg', alt: 'Vipin in the audience at an event', tall: true },
+  '/images/stage-red.jpg',
+  '/images/mic-bw.jpg',
+  '/images/crew.jpg',
+  '/images/stage-nyf.jpg',
+  '/images/stage-blue.jpg',
+  '/images/stage-white.jpg',
+  '/images/portrait-bw.jpg',
+  '/images/nagsen-festival.jpg',
+  '/images/crowd-clap.jpg',
 ]
 
-// Photo slider — `pos` sets the crop focus (object-position) for each photo
+// hero slider — captions come from strings.js (slides), same order.
+// `pos` = crop focus (object-position) for each photo
 export const SLIDES = [
-  { src: '/images/stage-red.jpg', kicker: 'Live', title: 'Live & Loud', text: 'Under the lights, every verse hits harder.', pos: '50% 28%' },
-  { src: '/images/mic-bw.jpg', kicker: 'The Craft', title: 'Every Word Counts', text: 'Research-driven writing, delivered raw.', pos: '62% 40%' },
-  { src: '/images/crew.jpg', kicker: 'The Crew', title: 'Rooted Together', text: 'Underground energy from Maharashtra.', pos: '50% 30%' },
-  { src: '/images/stage-nyf.jpg', kicker: 'Stage', title: 'Voice of the Youth', text: 'Taking Marathi hip-hop to bigger stages.', pos: '50% 22%' },
-  { src: '/images/stage-blue.jpg', kicker: 'Performance', title: 'Raw Expression', text: 'Cinematic performance, real emotion.', pos: '55% 35%' },
-  { src: '/images/stage-white.jpg', kicker: 'On the Mic', title: 'Let the Art Speak', text: 'Meaning over trends. Always.', pos: '50% 25%' },
-  { src: '/images/nagsen-festival.jpg', kicker: 'Recognition', title: 'Honoured', text: 'Recognised at Nagsen Festival.', pos: '50% 40%' },
+  { src: '/images/stage-red.jpg', pos: '55% 30%' },
+  { src: '/images/mic-bw.jpg', pos: '62% 40%' },
+  { src: '/images/crew.jpg', pos: '50% 30%' },
+  { src: '/images/stage-nyf.jpg', pos: '50% 22%' },
+  { src: '/images/stage-blue.jpg', pos: '60% 35%' },
+  { src: '/images/stage-white.jpg', pos: '50% 25%' },
+  { src: '/images/nagsen-festival.jpg', pos: '50% 40%' },
 ]

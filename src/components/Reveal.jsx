@@ -35,7 +35,7 @@ export function SplitWords({ text, className, delay = 0 }) {
       viewport={{ once: true, margin: '-40px' }}
     >
       {words.map((w, i) => (
-        <span key={i} aria-hidden style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', paddingBottom: '0.05em' }}>
+        <span key={i} aria-hidden className="sw-mask">
           <motion.span
             style={{ display: 'inline-block' }}
             variants={{ hidden: { y: '110%' }, show: { y: 0 } }}

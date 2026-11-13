@@ -1,8 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
-import { ROLES } from '../data'
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { SLIDES } from '../data'
+import { useLang, getIntroDelay } from '../i18n'
 
-const D = 1.9 // starts after loader
+const SLIDE_TIME = 5.5 // seconds per photo
+const ease = [0.7, 0, 0.2, 1]
+const pad = (n) => String(n).padStart(2, '0')
+
+// direction-aware wipe: the new photo is revealed from the side it comes from
+const wipe = {
+  enter: (dir) => ({ clipPath: dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)', zIndex: 2 }),
+  center: { clipPath: 'inset(0% 0% 0% 0%)', zIndex: 2, transition: { duration: 1.1, ease } },
+  exit: { zIndex: 1, transition: { duration: 1.1 } },
+}
 
 function Chars({ text, delay }) {
   return text.split('').map((c, i) => (
@@ -19,19 +29,35 @@ function Chars({ text, delay }) {
 }
 
 export default function Hero() {
+  const { t, lang } = useLang()
+  const [D] = useState(getIntroDelay)
   const ref = useRef(null)
+  const inView = useInView(ref, { amount: 0.25 })
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const devaY = useTransform(scrollYProgress, [0, 1], ['0%', '60%'])
-  const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 1.12])
+  const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '14%'])
 
-  const [idx, setIdx] = useState(0)
+  // rotating role word
+  const [role, setRole] = useState(0)
   useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % ROLES.length), 2400)
-    return () => clearInterval(t)
-  }, [])
+    const id = setInterval(() => setRole((i) => (i + 1) % t.hero.roles.length), 2400)
+    return () => clearInterval(id)
+  }, [t])
+
+  // photo slider
+  const N = SLIDES.length
+  const [[slide, dir], setSlide] = useState([0, 1])
+  const go = (d) => setSlide(([i]) => [(i + d + N) % N, d])
+  const goTo = (i) => setSlide(([c]) => [i, i >= c ? 1 : -1])
+  const [started, setStarted] = useState(false)
+  useEffect(() => {
+    const id = setTimeout(() => setStarted(true), (D + 1) * 1000)
+    return () => clearTimeout(id)
+  }, [D])
+  const paused = !started || !inView
+  const cap = t.slides[slide]
 
   const fade = (d) => ({
     initial: { opacity: 0, y: 24 },
@@ -43,23 +69,41 @@ export default function Hero() {
     <section className="hero" id="top" ref={ref}>
       <div className="hero-glow" />
       <div className="hero-glow two" />
+
+      {/* auto photo slider */}
       <motion.div
         className="hero-photo"
-        initial={{ clipPath: 'inset(0 0 100% 0)' }}
-        animate={{ clipPath: 'inset(0 0 0% 0)' }}
-        transition={{ duration: 1.4, ease: [0.7, 0, 0.2, 1], delay: D - 0.4 }}
+        initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+        animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+        transition={{ duration: 1.4, ease, delay: Math.max(0, D - 0.4) }}
       >
-        <motion.img src="/images/stage-red.jpg" alt="Vipin Tatad performing live" style={{ y: photoY, scale: photoScale }} fetchpriority="high" />
+        <motion.div className="hero-photo-inner" style={{ y: photoY }}>
+          <AnimatePresence initial={false} custom={dir}>
+            <motion.div key={slide} className="hero-slide" custom={dir} variants={wipe} initial="enter" animate="center" exit="exit">
+              <motion.img
+                src={SLIDES[slide].src}
+                alt={cap.title}
+                draggable={false}
+                style={{ objectPosition: SLIDES[slide].pos }}
+                initial={{ scale: 1.22, x: dir > 0 ? '3%' : '-3%' }}
+                animate={{ scale: 1.04, x: '0%' }}
+                transition={{ duration: SLIDE_TIME + 1.5, ease: 'easeOut' }}
+                fetchpriority={slide === 0 ? 'high' : 'auto'}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </motion.div>
+
       <motion.div className="hero-deva" style={{ y: devaY }} aria-hidden>
         हिप-हॉप
       </motion.div>
 
-      <motion.div className="container" style={{ y, opacity }}>
+      <motion.div className="container hero-content" style={{ y, opacity }}>
         <motion.div className="hero-top" {...fade(-0.3)}>
           <span className="dot" />
-          <span>Maharashtra, India</span>
-          <span className="aka">aka VIP</span>
+          <span>{t.hero.location}</span>
+          <span className="aka">{t.hero.aka}</span>
           <span className="eq" aria-hidden>
             <i /><i /><i /><i />
           </span>
@@ -75,41 +119,82 @@ export default function Hero() {
         </h1>
 
         <motion.div className="hero-roles" {...fade(0.5)}>
-          <span>Multilingual</span>
+          <span>{t.hero.multilingual}</span>
           <span className="sep">/</span>
           <span className="rotator">
             <AnimatePresence mode="wait">
               <motion.span
-                key={idx}
+                key={`${lang}-${role}`}
                 initial={{ y: '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: '-100%', opacity: 0 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 style={{ display: 'inline-block' }}
               >
-                {ROLES[idx].replace('Multilingual ', '')}
+                {t.hero.roles[role % t.hero.roles.length]}
               </motion.span>
             </AnimatePresence>
           </span>
         </motion.div>
 
         <motion.p className="hero-tagline" {...fade(0.65)}>
-          <b>Rooted in Culture. Driven by Stories. Powered by Hip-Hop.</b> Marathi, Hindi &amp; English hip-hop with
-          powerful lyricism and cinematic storytelling.
+          <b>{t.hero.taglineStrong}</b> {t.hero.taglineRest}
         </motion.p>
 
         <motion.div className="hero-ctas" {...fade(0.8)}>
           <a href="#music" className="btn primary">
-            Explore the Music <span className="arr">→</span>
+            {t.hero.cta1} <span className="arr">→</span>
           </a>
           <a href="#contact" className="btn">
-            Book / Collaborate
+            {t.hero.cta2}
           </a>
         </motion.div>
       </motion.div>
 
+      {/* slider caption + controls */}
+      <motion.div className="hero-slider-ui" {...fade(1)}>
+        <div className="hs-caption" aria-live="polite">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${lang}-${slide}`}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+            >
+              <span className="hs-kicker">
+                <b>{pad(slide + 1)}</b> / {pad(N)} — {cap.kicker}
+              </span>
+              <span className="hs-title">{cap.title}</span>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="hs-row">
+          <div className="s-progress">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.src}
+                className={`s-seg ${i < slide ? 'done' : ''} ${i === slide ? 'active' : ''}`}
+                onClick={() => goTo(i)}
+                aria-label={`Photo ${i + 1}`}
+              >
+                <i
+                  key={i === slide ? `a${slide}` : 'idle'}
+                  style={{ animationDuration: `${SLIDE_TIME}s`, animationPlayState: paused ? 'paused' : 'running' }}
+                  onAnimationEnd={() => i === slide && go(1)}
+                />
+              </button>
+            ))}
+          </div>
+          <div className="hs-arrows">
+            <button className="s-arrow" onClick={() => go(-1)} aria-label="Previous photo">←</button>
+            <button className="s-arrow" onClick={() => go(1)} aria-label="Next photo">→</button>
+          </div>
+        </div>
+      </motion.div>
+
       <motion.div className="scroll-cue" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: D + 1.2 }}>
-        Scroll
+        {t.hero.scroll}
         <i />
       </motion.div>
     </section>

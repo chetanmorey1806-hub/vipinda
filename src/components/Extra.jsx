@@ -2,32 +2,32 @@ import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, SplitWords, SectionHead, ClipReveal } from './Reveal'
 import { CONTACT, PRESS, GALLERY } from '../data'
+import { useLang } from '../i18n'
 
 /* ───────────────── LATEST RELEASE ───────────────── */
 export function Release() {
+  const { t } = useLang()
+  const r = t.release
   return (
     <section id="release" className="release">
       <div className="container release-grid">
         <ClipReveal className="poster" from="inset(100% 0% 0% 0%)" scale={1.1} duration={1.3}>
-          <img src="/images/release-poster.jpg" alt="Latest release poster — Raptoli presents, rapper Vipin Tatad VIP" />
+          <img src="/images/release-poster.jpg" alt="चर्चेत — Raptoli presents, rapper Vipin Tatad VIP" />
           <span className="poster-badge">
-            <span className="dot" /> Out Now
+            <span className="dot" /> {r.badge}
           </span>
         </ClipReveal>
 
         <div>
-          <SectionHead eyebrow="Latest Release">
-            <span className="deva-head">चर्चेत</span> <span className="hl"><SplitWords text="Out now." delay={0.12} /></span>
+          <SectionHead eyebrow={r.eyebrow}>
+            <span className="deva-head">चर्चेत</span> <span className="hl"><SplitWords text={r.out} delay={0.12} /></span>
           </SectionHead>
           <Reveal delay={0.1}>
-            <p className="lead muted" style={{ marginTop: 24 }}>
-              Raptoli presents <em>चर्चेत</em> (Charchet), the latest Marathi hip-hop drop from Vipin Tatad (VIP) — a street-level crew anthem shot
-              in the lanes it speaks for. Streaming now on the Raptoli YouTube channel.
-            </p>
+            <p className="lead muted" style={{ marginTop: 24 }}>{r.para}</p>
           </Reveal>
           <Reveal delay={0.2} className="hero-ctas">
             <a href={CONTACT.youtube} target="_blank" rel="noreferrer" className="btn primary">
-              Watch on YouTube <span className="arr">→</span>
+              {r.watch} <span className="arr">→</span>
             </a>
             <a href={CONTACT.spotify} target="_blank" rel="noreferrer" className="btn">
               Spotify
@@ -54,24 +54,23 @@ export function Release() {
 
 /* ───────────────── PRESS ───────────────── */
 export function Press() {
+  const { t } = useLang()
+  const p = t.press
   return (
     <section id="press" className="press">
       <div className="container">
-        <SectionHead eyebrow="Press & Features">
-          <SplitWords text="In the" /> <span className="outline"><SplitWords text="headlines" delay={0.12} /></span>
+        <SectionHead eyebrow={p.eyebrow}>
+          <SplitWords text={p.h1} /> <span className="outline"><SplitWords text={p.h2} delay={0.12} /></span>
         </SectionHead>
         <Reveal delay={0.1}>
-          <p className="lead muted" style={{ marginTop: 24 }}>
-            From the Swachh Bharat critique <em>Meri Galli Ki Samasya</em> to protest anthems — his socially conscious rap
-            has been covered by national media and recognised at JNU and TISS.
-          </p>
+          <p className="lead muted" style={{ marginTop: 24 }}>{p.lead}</p>
         </Reveal>
 
         <div className="press-list">
-          {PRESS.map((p, i) => (
+          {PRESS.map((item, i) => (
             <motion.a
-              key={p.url}
-              href={p.url}
+              key={item.url}
+              href={item.url}
               target="_blank"
               rel="noreferrer"
               className="press-item"
@@ -80,8 +79,8 @@ export function Press() {
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.7, delay: (i % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="press-outlet">{p.outlet}</span>
-              <span className={`press-title ${p.deva ? 'deva' : ''}`}>{p.title}</span>
+              <span className="press-outlet">{item.outlet}</span>
+              <span className={`press-title ${item.deva ? 'deva' : ''}`} lang={item.deva ? 'mr' : 'en'}>{item.title}</span>
               <span className="press-arrow" aria-hidden>↗</span>
             </motion.a>
           ))}
@@ -93,6 +92,8 @@ export function Press() {
 
 /* ───────────────── GALLERY ───────────────── */
 export function Gallery() {
+  const { t } = useLang()
+  const g = t.gallery
   const [open, setOpen] = useState(null)
 
   const go = useCallback((d) => setOpen((i) => (i === null ? i : (i + d + GALLERY.length) % GALLERY.length)), [])
@@ -115,25 +116,25 @@ export function Gallery() {
   return (
     <section id="gallery" className="gallery">
       <div className="container">
-        <SectionHead eyebrow="Gallery">
-          <SplitWords text="Live." /> <span className="hl"><SplitWords text="Loud." delay={0.1} /></span>{' '}
-          <span className="outline"><SplitWords text="Real." delay={0.2} /></span>
+        <SectionHead eyebrow={g.eyebrow}>
+          <SplitWords text={g.words[0]} /> <span className="hl"><SplitWords text={g.words[1]} delay={0.1} /></span>{' '}
+          <span className="outline"><SplitWords text={g.words[2]} delay={0.2} /></span>
         </SectionHead>
 
         <div className="masonry">
-          {GALLERY.map((g, i) => (
+          {GALLERY.map((src, i) => (
             <motion.button
-              key={g.src}
+              key={src}
               className="shot"
               onClick={() => setOpen(i)}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.9, delay: (i % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              aria-label={`Open photo: ${g.alt}`}
+              aria-label={g.caps[i]}
             >
-              <img src={g.src} alt={g.alt} loading="lazy" />
-              <span className="shot-cap">{g.alt}</span>
+              <img src={src} alt={g.caps[i]} loading="lazy" />
+              <span className="shot-cap">{g.caps[i]}</span>
             </motion.button>
           ))}
         </div>
@@ -151,8 +152,8 @@ export function Gallery() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={open}
-                src={GALLERY[open].src}
-                alt={GALLERY[open].alt}
+                src={GALLERY[open]}
+                alt={g.caps[open]}
                 initial={{ opacity: 0, scale: 0.94 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
@@ -167,7 +168,7 @@ export function Gallery() {
               />
             </AnimatePresence>
             <p className="lb-cap">
-              {GALLERY[open].alt} <span>{open + 1} / {GALLERY.length}</span>
+              {g.caps[open]} <span>{open + 1} / {GALLERY.length}</span>
             </p>
             <button className="lb-btn lb-close" onClick={() => setOpen(null)} aria-label="Close">✕</button>
             <button className="lb-btn lb-prev" onClick={(e) => { e.stopPropagation(); go(-1) }} aria-label="Previous">←</button>

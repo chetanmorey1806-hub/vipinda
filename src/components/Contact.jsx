@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Reveal, SplitWords } from './Reveal'
 import { CONTACT } from '../data'
+import { useLang } from '../i18n'
 
 const icons = {
   Instagram: (
@@ -18,6 +19,8 @@ const icons = {
 }
 
 export default function Contact() {
+  const { t } = useLang()
+  const c = t.contact
   const socials = [
     { name: 'Instagram', href: CONTACT.instagram },
     { name: 'YouTube', href: CONTACT.youtube },
@@ -28,19 +31,17 @@ export default function Contact() {
     <section id="contact" className="contact">
       <div className="container">
         <Reveal>
-          <span className="eyebrow">Connect with Vipin</span>
+          <span className="eyebrow">{c.eyebrow}</span>
         </Reveal>
         <h2 className="contact-title">
-          <SplitWords text="Let's create" />
+          <SplitWords text={c.title[0]} />
           <br />
-          <span className="outline"><SplitWords text="something" delay={0.12} /></span>
+          <span className="outline"><SplitWords text={c.title[1]} delay={0.12} /></span>
           <br />
-          <SplitWords text="meaningful." delay={0.24} />
+          <SplitWords text={c.title[2]} delay={0.24} />
         </h2>
         <Reveal delay={0.1}>
-          <p className="contact-sub">
-            For bookings, collaborations, interviews, media inquiries and professional opportunities — get in touch.
-          </p>
+          <p className="contact-sub">{c.sub}</p>
         </Reveal>
         <Reveal delay={0.15}>
           <a className="mail" href={`mailto:${CONTACT.email}`}>
@@ -75,6 +76,7 @@ export default function Contact() {
 }
 
 export function Footer() {
+  const { t } = useLang()
   return (
     <footer className="footer">
       <div className="container">
@@ -88,9 +90,9 @@ export function Footer() {
           Vipin Tatad
         </motion.div>
         <div className="footer-row">
-          <b>Independent Voice · Cultural Identity · Global Vision</b>
-          <span>© {new Date().getFullYear()} Vipin Tatad. All rights reserved.</span>
-          <a href="#top" className="to-top">Back to top ↑</a>
+          <b>{t.footer.tag}</b>
+          <span>© {new Date().getFullYear()} Vipin Tatad. {t.footer.rights}</span>
+          <a href="#top" className="to-top">{t.footer.top}</a>
         </div>
       </div>
     </footer>
