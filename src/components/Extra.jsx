@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, SplitWords, SectionHead, ClipReveal } from './Reveal'
 import { CONTACT, PRESS } from '../data'
-import { GALLERY, caption } from '../gallery'
+import { useGallery } from '../gallery'
 import { Tilt, Ring3D } from './FX'
 import { useLang } from '../i18n'
 
@@ -99,8 +99,9 @@ export function Gallery() {
   const { t } = useLang()
   const g = t.gallery
   const [open, setOpen] = useState(null)
+  const PHOTOS = useGallery(t)
 
-  const go = useCallback((d) => setOpen((i) => (i === null ? i : (i + d + GALLERY.length) % GALLERY.length)), [])
+  const go = useCallback((d) => setOpen((i) => (i === null ? i : (i + d + PHOTOS.length) % PHOTOS.length)), [PHOTOS.length])
 
   useEffect(() => {
     if (open === null) return
@@ -129,12 +130,12 @@ export function Gallery() {
 
       {/* 3D rotating ring — drag to spin, tap a photo to open */}
       <div className="container">
-        <Ring3D items={GALLERY.map((it) => ({ src: it.src, alt: caption(t, it) }))} onOpen={setOpen} label={g.eyebrow} />
+        <Ring3D items={PHOTOS.slice(0, 14)} onOpen={setOpen} label={g.eyebrow} />
       </div>
 
       {/* auto-scrolling photo strips (pause on hover, tap to open) */}
       <div className="ribbon">
-        {[GALLERY, [...GALLERY].reverse()].map((row, r) => (
+        {[PHOTOS, [...PHOTOS].reverse()].map((row, r) => (
           <div key={r} className={`ribbon-row ${r ? 'rev' : ''}`}>
             <div className="ribbon-track">
               {[...row, ...row].map((g, i) => (
@@ -143,7 +144,7 @@ export function Gallery() {
                   className="ribbon-item"
                   tabIndex={-1}
                   aria-hidden
-                  onClick={() => setOpen(GALLERY.indexOf(g))}
+                  onClick={() => setOpen(PHOTOS.indexOf(g))}
                 >
                   <img src={g.src} alt="" loading="lazy" draggable={false} />
                 </button>
@@ -155,7 +156,7 @@ export function Gallery() {
 
       <div className="container">
         <div className="masonry">
-          {GALLERY.map((g, i) => (
+          {PHOTOS.map((g, i) => (
             <motion.button
               key={g.src}
               className="shot"
@@ -164,11 +165,11 @@ export function Gallery() {
               whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.9, delay: (i % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              aria-label={caption(t, g)}
+              aria-label={g.alt}
             >
               <Tilt className="shot-tilt" max={8} scale={1}>
-                <img src={g.src} alt={caption(t, g)} loading="lazy" />
-                <span className="shot-cap">{caption(t, g)}</span>
+                <img src={g.src} alt={g.alt} loading="lazy" />
+                <span className="shot-cap">{g.alt}</span>
               </Tilt>
             </motion.button>
           ))}
@@ -187,8 +188,8 @@ export function Gallery() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={open}
-                src={GALLERY[open].src}
-                alt={caption(t, GALLERY[open])}
+                src={PHOTOS[open].src}
+                alt={PHOTOS[open].alt}
                 initial={{ opacity: 0, scale: 0.94 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
@@ -203,7 +204,7 @@ export function Gallery() {
               />
             </AnimatePresence>
             <p className="lb-cap">
-              {caption(t, GALLERY[open])} <span>{open + 1} / {GALLERY.length}</span>
+              {PHOTOS[open].alt} <span>{open + 1} / {PHOTOS.length}</span>
             </p>
             <button className="lb-btn lb-close" onClick={() => setOpen(null)} aria-label="Close">✕</button>
             <button className="lb-btn lb-prev" onClick={(e) => { e.stopPropagation(); go(-1) }} aria-label="Previous">←</button>

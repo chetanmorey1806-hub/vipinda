@@ -107,7 +107,10 @@ export default function Footer() {
       <div className="container footer-bottom">
         <b>{f.tag}</b>
         <span>
-          © {new Date().getFullYear()} Vipin Tatad. {f.rights}
+          © {new Date().getFullYear()} Vipin Tatad. {f.rights}{' '}
+          <a href="#admin" className="admin-link" title="Manage gallery photos">
+            🔒 Manage photos
+          </a>
         </span>
         <a href="#top" className="to-top-ring" aria-label={f.top} title={f.top}>
           <svg viewBox="0 0 100 100" aria-hidden>

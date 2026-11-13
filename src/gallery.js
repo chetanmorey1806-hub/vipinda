@@ -28,3 +28,49 @@ export const GALLERY = Object.entries(files)
   })
 
 export const caption = (t, g) => t.gallery.caps[g.key] || g.fallback
+
+// ─────────────────────────────────────────────────────────────
+//  Photos uploaded from the website (/#admin) live in Supabase.
+//  useGallery() = uploaded photos (newest first) + built-in photos.
+// ─────────────────────────────────────────────────────────────
+import { useEffect, useState } from 'react'
+import { supabase } from './supabase'
+
+const listeners = new Set()
+let uploaded = []
+let loaded = false
+
+export async function refreshUploaded() {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from('gallery_photos')
+    .select('id, path, url, caption, created_at')
+    .order('created_at', { ascending: false })
+  if (error) {
+    console.warn('Gallery: could not load uploaded photos —', error.message)
+    return uploaded
+  }
+  uploaded = data
+  loaded = true
+  listeners.forEach((fn) => fn(uploaded))
+  return uploaded
+}
+
+export function useUploaded() {
+  const [list, setList] = useState(uploaded)
+  useEffect(() => {
+    listeners.add(setList)
+    if (!loaded) refreshUploaded()
+    return () => listeners.delete(setList)
+  }, [])
+  return list
+}
+
+/** Gallery items for display: { src, alt, uploaded } */
+export function useGallery(t) {
+  const up = useUploaded()
+  return [
+    ...up.map((p) => ({ src: p.url, alt: p.caption || 'Vipin Tatad', uploaded: true })),
+    ...GALLERY.map((g) => ({ src: g.src, alt: caption(t, g), uploaded: false })),
+  ]
+}

@@ -11,6 +11,7 @@ import { Release, Press, Gallery } from './components/Extra'
 import { useLang, markIntroDone } from './i18n'
 import { WhatsAppFab } from './components/WhatsApp'
 import { Cursor, useMagnetic } from './components/FX'
+import Admin, { useAdminRoute } from './components/Admin'
 
 export default function App() {
   const { t, lang } = useLang()
@@ -18,6 +19,7 @@ export default function App() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 })
   useMagnetic()
+  const [adminOpen, closeAdmin] = useAdminRoute()
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -37,6 +39,7 @@ export default function App() {
       <motion.div className="progress" style={{ scaleX }} />
 
       <Navbar />
+      <AnimatePresence>{adminOpen && <Admin key="admin" onClose={closeAdmin} />}</AnimatePresence>
       <WhatsAppFab />
       {/* remount on language change so every text animation replays in the new language */}
       <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
