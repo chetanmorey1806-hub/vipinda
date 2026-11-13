@@ -9,12 +9,15 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import { Release, Press, Gallery } from './components/Extra'
 import { useLang, markIntroDone } from './i18n'
+import { WhatsAppFab } from './components/WhatsApp'
+import { Cursor, useMagnetic } from './components/FX'
 
 export default function App() {
   const { t, lang } = useLang()
   const [loading, setLoading] = useState(true)
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 })
+  useMagnetic()
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -29,10 +32,12 @@ export default function App() {
   return (
     <>
       <div className="grain" aria-hidden />
+      <Cursor />
       <AnimatePresence>{loading && <Loader key="loader" />}</AnimatePresence>
       <motion.div className="progress" style={{ scaleX }} />
 
       <Navbar />
+      <WhatsAppFab />
       {/* remount on language change so every text animation replays in the new language */}
       <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <main>

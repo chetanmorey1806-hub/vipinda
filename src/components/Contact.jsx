@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Reveal, SplitWords } from './Reveal'
 import { CONTACT } from '../data'
 import { useLang } from '../i18n'
+import { WaIcon, waLink, WhatsAppComposer } from './WhatsApp'
 
 export const icons = {
   Instagram: (
@@ -13,6 +14,7 @@ export const icons = {
   Facebook: (
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12Z" /></svg>
   ),
+  WhatsApp: WaIcon,
   Spotify: (
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22Zm5 15.9a.7.7 0 0 1-1 .2c-2.7-1.6-6-2-10-1.1a.7.7 0 1 1-.3-1.3c4.3-1 8-.6 11 1.2.3.2.4.7.3 1Zm1.4-3.1a.9.9 0 0 1-1.2.3c-3-1.9-7.7-2.4-11.3-1.3a.9.9 0 1 1-.5-1.7c4.1-1.2 9.2-.6 12.7 1.5.4.3.5.8.3 1.2Zm.1-3.2C14.9 8.4 8.9 8.2 5.4 9.3a1 1 0 1 1-.6-2c4-1.2 10.7-1 14.8 1.5a1 1 0 1 1-1.1 1.8Z" /></svg>
   ),
@@ -22,6 +24,7 @@ export default function Contact() {
   const { t } = useLang()
   const c = t.contact
   const socials = [
+    { name: 'WhatsApp', href: waLink(t.wa.quick), wa: true },
     { name: 'Instagram', href: CONTACT.instagram },
     { name: 'YouTube', href: CONTACT.youtube },
     { name: 'Facebook', href: CONTACT.facebook },
@@ -30,43 +33,54 @@ export default function Contact() {
   return (
     <section id="contact" className="contact">
       <div className="container">
-        <Reveal>
-          <span className="eyebrow">{c.eyebrow}</span>
-        </Reveal>
-        <h2 className="contact-title">
-          <SplitWords text={c.title[0]} />
-          <br />
-          <span className="outline"><SplitWords text={c.title[1]} delay={0.12} /></span>
-          <br />
-          <SplitWords text={c.title[2]} delay={0.24} />
-        </h2>
-        <Reveal delay={0.1}>
-          <p className="contact-sub">{c.sub}</p>
-        </Reveal>
-        <Reveal delay={0.15}>
-          <a className="mail" href={`mailto:${CONTACT.email}`}>
-            {CONTACT.email} <span>→</span>
-          </a>
-        </Reveal>
+        <div className="contact-grid">
+          <div>
+            <Reveal>
+              <span className="eyebrow">{c.eyebrow}</span>
+            </Reveal>
+            <h2 className="contact-title">
+              <SplitWords text={c.title[0]} />
+              <br />
+              <span className="outline"><SplitWords text={c.title[1]} delay={0.12} /></span>
+              <br />
+              <SplitWords text={c.title[2]} delay={0.24} />
+            </h2>
+            <Reveal delay={0.1}>
+              <p className="contact-sub">{c.sub}</p>
+            </Reveal>
+            <Reveal delay={0.15}>
+              <a className="mail" href={`mailto:${CONTACT.email}`}>
+                {CONTACT.email} <span>→</span>
+              </a>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <a className="wa-line" href={waLink(t.wa.quick)} target="_blank" rel="noreferrer">
+                {WaIcon}
+                <span>+91 70300 26920</span>
+              </a>
+            </Reveal>
+          </div>
+          <WhatsAppComposer />
+        </div>
 
         <div className="socials">
           {socials.map((s, i) => (
             <motion.a
               key={s.name}
-              className="social"
+              className={`social ${s.wa ? 'wa' : ''}`}
               href={s.href}
               target="_blank"
               rel="noreferrer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span className="social-main">
                 {icons[s.name]}
-                {s.name}
+                <span className="social-name">{s.name}</span>
               </span>
-              <span>↗</span>
+              <span className="social-arrow" aria-hidden>↗</span>
             </motion.a>
           ))}
         </div>

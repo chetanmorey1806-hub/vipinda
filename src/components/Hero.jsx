@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useFinePointer } from './FX'
 import { SLIDES } from '../data'
 import { useLang, getIntroDelay } from '../i18n'
 
@@ -39,6 +40,22 @@ export default function Hero() {
   const devaY = useTransform(scrollYProgress, [0, 1], ['0%', '60%'])
   const photoY = useTransform(scrollYProgress, [0, 1], ['0%', '14%'])
 
+  // mouse parallax — layers drift at different depths
+  const fine = useFinePointer()
+  const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
+  const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
+  const titleX = useTransform(mx, (v) => v * -18)
+  const titleY = useTransform(my, (v) => v * -10)
+  const photoX = useTransform(mx, (v) => v * 14)
+  const devaX = useTransform(mx, (v) => v * 34)
+  const glowX = useTransform(mx, (v) => v * 60)
+  const glowY = useTransform(my, (v) => v * 40)
+  const onPointerMove = (e) => {
+    if (!fine) return
+    mx.set(e.clientX / window.innerWidth - 0.5)
+    my.set(e.clientY / window.innerHeight - 0.5)
+  }
+
   // rotating role word
   const [role, setRole] = useState(0)
   useEffect(() => {
@@ -66,8 +83,8 @@ export default function Hero() {
   })
 
   return (
-    <section className="hero" id="top" ref={ref}>
-      <div className="hero-glow" />
+    <section className="hero" id="top" ref={ref} onPointerMove={onPointerMove}>
+      <motion.div className="hero-glow" style={{ x: glowX, y: glowY }} />
       <div className="hero-glow two" />
 
       {/* auto photo slider */}
@@ -77,7 +94,7 @@ export default function Hero() {
         animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
         transition={{ duration: 1.4, ease, delay: Math.max(0, D - 0.4) }}
       >
-        <motion.div className="hero-photo-inner" style={{ y: photoY }}>
+        <motion.div className="hero-photo-inner" style={{ y: photoY, x: photoX }}>
           <AnimatePresence initial={false} custom={dir}>
             <motion.div key={slide} className="hero-slide" custom={dir} variants={wipe} initial="enter" animate="center" exit="exit">
               <motion.img
@@ -95,7 +112,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      <motion.div className="hero-deva" style={{ y: devaY }} aria-hidden>
+      <motion.div className="hero-deva" style={{ y: devaY, x: devaX }} aria-hidden>
         हिप-हॉप
       </motion.div>
 
@@ -109,14 +126,14 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        <h1 className="hero-title" aria-label="Vipin Tatad">
+        <motion.h1 className="hero-title" aria-label="Vipin Tatad" style={{ x: titleX, y: titleY }}>
           <span className="line" aria-hidden>
             <Chars text="Vipin" delay={D - 0.2} />
           </span>
           <span className="line second" aria-hidden>
             <Chars text="Tatad" delay={D} />
           </span>
-        </h1>
+        </motion.h1>
 
         <motion.div className="hero-roles" {...fade(0.5)}>
           <span>{t.hero.multilingual}</span>

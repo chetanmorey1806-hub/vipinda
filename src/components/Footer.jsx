@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { CONTACT, NAV } from '../data'
 import { useLang } from '../i18n'
 import { icons } from './Contact'
+import { waLink } from './WhatsApp'
 
 const rise = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -32,6 +33,7 @@ export default function Footer() {
   }
 
   const socials = [
+    { name: 'WhatsApp', href: waLink(t.wa.quick) },
     { name: 'Instagram', href: CONTACT.instagram },
     { name: 'YouTube', href: CONTACT.youtube },
     { name: 'Facebook', href: CONTACT.facebook },
@@ -121,6 +123,21 @@ export default function Footer() {
           <span className="ring-arrow">↑</span>
         </a>
       </div>
+
+      {/* developer credit — very bottom */}
+      <motion.div
+        className="dev-credit"
+        initial={{ opacity: 0, y: 14, filter: 'blur(6px)' }}
+        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        lang="en"
+      >
+        <span className="dev-code" aria-hidden>&lt;/&gt;</span>
+        <span className="dev-by">Developed by</span>
+        <span className="dev-name">ER. Chetan D Morey</span>
+        <span className="dev-spark" aria-hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.7 4.5c2.1 0 3.6 1.1 5.3 3 1.7-1.9 3.2-3 5.3-3 3.7 0 5.8 3.7 4.3 7.2C19.5 16.4 12 21 12 21Z" /></svg></span>
+      </motion.div>
     </footer>
   )
 }

@@ -1,10 +1,49 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Reveal, SplitWords, Counter, SectionHead, ClipReveal } from './Reveal'
-import { LANGUAGES, BEYOND_ICONS } from '../data'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { Reveal, SplitWords, Counter, SectionHead, ClipReveal, ScrollWords } from './Reveal'
+import { LANGUAGES, BEYOND_ICONS, ABOUT_PHOTOS } from '../data'
+import { Tilt } from './FX'
 import { useLang } from '../i18n'
 
 /* ───────────────── ABOUT ───────────────── */
+const FADE_TIME = 3500
+
+/** Cross-fading photo slider with a slow Ken Burns zoom. */
+function FadeSlider({ alt }) {
+  const [i, setI] = useState(0)
+  const ref = useRef(null)
+  const inView = useInView(ref, { amount: 0.3 })
+  useEffect(() => {
+    if (!inView) return
+    const id = setInterval(() => setI((x) => (x + 1) % ABOUT_PHOTOS.length), FADE_TIME)
+    return () => clearInterval(id)
+  }, [inView, i])
+  const p = ABOUT_PHOTOS[i]
+  return (
+    <div className="fade-slider" ref={ref}>
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={p.src}
+          src={p.src}
+          alt={alt}
+          style={{ objectPosition: p.pos }}
+          initial={{ opacity: 0, scale: 1.14 }}
+          animate={{ opacity: 1, scale: 1.02 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 1.2, ease: 'easeInOut' }, scale: { duration: FADE_TIME / 1000 + 1.5, ease: 'easeOut' } }}
+        />
+      </AnimatePresence>
+      <div className="fs-dots">
+        {ABOUT_PHOTOS.map((ph, k) => (
+          <button key={ph.src} className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={`Photo ${k + 1}`}>
+            {k === i && <motion.i layoutId="fs-dot" />}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function About() {
   const { t } = useLang()
   const a = t.about
@@ -17,9 +56,7 @@ export function About() {
 
         <div className="about-grid">
           <div className="about-text">
-            <Reveal>
-              <p className="lead">{a.lead}</p>
-            </Reveal>
+            <ScrollWords className="lead" text={a.lead} />
             {a.p.map((p, i) => (
               <Reveal key={i} delay={0.1 + i * 0.05}>
                 <p className="muted">{p}</p>
@@ -28,10 +65,41 @@ export function About() {
           </div>
 
           <div>
-            <ClipReveal as="figure" className="about-photo" from="inset(0% 100% 0% 0%)">
-              <img src="/images/portrait-bw.jpg" alt="Portrait of Vipin Tatad" />
-              <figcaption>{a.photoCap}</figcaption>
-            </ClipReveal>
+            <Tilt className="about-visual" depth max={7} scale={1} glare={false}>
+              <ClipReveal as="figure" className="about-photo" from="inset(0% 100% 0% 0%)">
+                <FadeSlider alt="Vipin Tatad" />
+                <figcaption>{a.photoCap}</figcaption>
+              </ClipReveal>
+              <motion.div
+                className="about-ring"
+                style={{ z: 70 }}
+                initial={{ opacity: 0, scale: 0.4, rotate: -120 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                viewport={{ once: true }}
+                transition={{ type: 'spring', stiffness: 120, damping: 14, delay: 0.6 }}
+                aria-hidden
+              >
+                <svg viewBox="0 0 100 100">
+                  <defs>
+                    <path id="about-ring-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+                  </defs>
+                  <text>
+                    <textPath href="#about-ring-path" textLength="236" lengthAdjust="spacing">{a.ring}</textPath>
+                  </text>
+                </svg>
+                <span>VIP</span>
+              </motion.div>
+              <motion.span
+                className="about-sign"
+                style={{ z: 50 }}
+                initial={{ opacity: 0, scale: 1.6, rotate: -14 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: -6 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1], delay: 0.9 }}
+              >
+                {a.signature}
+              </motion.span>
+            </Tilt>
             <Reveal className="stats">
               <div className="stat">
                 <Counter to={3} />

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, SplitWords, SectionHead, ClipReveal } from './Reveal'
-import { CONTACT, PRESS, GALLERY } from '../data'
+import { CONTACT, PRESS } from '../data'
+import { GALLERY, caption } from '../gallery'
+import { Tilt, Ring3D } from './FX'
 import { useLang } from '../i18n'
 
 /* ───────────────── LATEST RELEASE ───────────────── */
@@ -11,12 +13,14 @@ export function Release() {
   return (
     <section id="release" className="release">
       <div className="container release-grid">
+        <Tilt className="poster-tilt" max={9}>
         <ClipReveal className="poster" from="inset(100% 0% 0% 0%)" scale={1.1} duration={1.3}>
           <img src="/images/release-poster.jpg" alt="चर्चेत — Raptoli presents, rapper Vipin Tatad VIP" />
           <span className="poster-badge">
             <span className="dot" /> {r.badge}
           </span>
         </ClipReveal>
+        </Tilt>
 
         <div>
           <SectionHead eyebrow={r.eyebrow}>
@@ -121,20 +125,51 @@ export function Gallery() {
           <span className="outline"><SplitWords text={g.words[2]} delay={0.2} /></span>
         </SectionHead>
 
+      </div>
+
+      {/* 3D rotating ring — drag to spin, tap a photo to open */}
+      <div className="container">
+        <Ring3D items={GALLERY.map((it) => ({ src: it.src, alt: caption(t, it) }))} onOpen={setOpen} label={g.eyebrow} />
+      </div>
+
+      {/* auto-scrolling photo strips (pause on hover, tap to open) */}
+      <div className="ribbon">
+        {[GALLERY, [...GALLERY].reverse()].map((row, r) => (
+          <div key={r} className={`ribbon-row ${r ? 'rev' : ''}`}>
+            <div className="ribbon-track">
+              {[...row, ...row].map((g, i) => (
+                <button
+                  key={i}
+                  className="ribbon-item"
+                  tabIndex={-1}
+                  aria-hidden
+                  onClick={() => setOpen(GALLERY.indexOf(g))}
+                >
+                  <img src={g.src} alt="" loading="lazy" draggable={false} />
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="container">
         <div className="masonry">
-          {GALLERY.map((src, i) => (
+          {GALLERY.map((g, i) => (
             <motion.button
-              key={src}
+              key={g.src}
               className="shot"
               onClick={() => setOpen(i)}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 50, scale: 0.96, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.9, delay: (i % 3) * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              aria-label={g.caps[i]}
+              aria-label={caption(t, g)}
             >
-              <img src={src} alt={g.caps[i]} loading="lazy" />
-              <span className="shot-cap">{g.caps[i]}</span>
+              <Tilt className="shot-tilt" max={8} scale={1}>
+                <img src={g.src} alt={caption(t, g)} loading="lazy" />
+                <span className="shot-cap">{caption(t, g)}</span>
+              </Tilt>
             </motion.button>
           ))}
         </div>
@@ -152,8 +187,8 @@ export function Gallery() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={open}
-                src={GALLERY[open]}
-                alt={g.caps[open]}
+                src={GALLERY[open].src}
+                alt={caption(t, GALLERY[open])}
                 initial={{ opacity: 0, scale: 0.94 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
@@ -168,7 +203,7 @@ export function Gallery() {
               />
             </AnimatePresence>
             <p className="lb-cap">
-              {g.caps[open]} <span>{open + 1} / {GALLERY.length}</span>
+              {caption(t, GALLERY[open])} <span>{open + 1} / {GALLERY.length}</span>
             </p>
             <button className="lb-btn lb-close" onClick={() => setOpen(null)} aria-label="Close">✕</button>
             <button className="lb-btn lb-prev" onClick={(e) => { e.stopPropagation(); go(-1) }} aria-label="Previous">←</button>

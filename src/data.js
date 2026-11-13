@@ -2,6 +2,9 @@
 //  Links, photos and other non-translated content.
 //  All page text (English / हिंदी / मराठी) lives in src/strings.js.
 // ─────────────────────────────────────────────────────────────
+// WhatsApp number with country code (91 = India), digits only
+export const WHATSAPP = '917030026920'
+
 export const CONTACT = {
   email: 'vipintatad7@gmail.com',
   instagram: 'https://www.instagram.com/vipintatad_vip',
@@ -20,7 +23,7 @@ export const LANGUAGES = [
   { word: 'English', label: 'English' },
 ]
 
-export const BEYOND_ICONS = ['✎', '◉', '✂', '▣', '✦', '▶']
+export const BEYOND_ICONS = ['✎', '◉', '✂', '▣', '◆', '▶']
 
 // press headlines stay in their original language
 export const PRESS = [
@@ -72,19 +75,6 @@ export const PRESS = [
   },
 ]
 
-// gallery photos — captions come from strings.js (gallery.caps), same order
-export const GALLERY = [
-  '/images/stage-red.jpg',
-  '/images/mic-bw.jpg',
-  '/images/crew.jpg',
-  '/images/stage-nyf.jpg',
-  '/images/stage-blue.jpg',
-  '/images/stage-white.jpg',
-  '/images/portrait-bw.jpg',
-  '/images/nagsen-festival.jpg',
-  '/images/crowd-clap.jpg',
-]
-
 // hero slider — captions come from strings.js (slides), same order.
 // `pos` = crop focus (object-position) for each photo
 export const SLIDES = [
@@ -95,4 +85,12 @@ export const SLIDES = [
   { src: '/images/stage-blue.jpg', pos: '60% 35%' },
   { src: '/images/stage-white.jpg', pos: '50% 25%' },
   { src: '/images/nagsen-festival.jpg', pos: '50% 40%' },
+]
+
+// About section fade slider
+export const ABOUT_PHOTOS = [
+  { src: '/images/portrait-bw.jpg', pos: '50% 35%' },
+  { src: '/images/stage-nyf.jpg', pos: '50% 25%' },
+  { src: '/images/crowd-clap.jpg', pos: '55% 35%' },
+  { src: '/images/mic-bw.jpg', pos: '62% 40%' },
 ]

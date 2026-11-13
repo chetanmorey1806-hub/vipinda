@@ -1,4 +1,4 @@
-import { motion, useInView, animate } from 'framer-motion'
+import { motion, useInView, animate, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 export const ease = [0.7, 0, 0.2, 1]
@@ -9,10 +9,10 @@ export function Reveal({ children, delay = 0, y = 40, as = 'div', className, ...
   return (
     <Comp
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y, filter: 'blur(8px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay }}
       {...rest}
     >
       {children}
@@ -96,5 +96,30 @@ export function ClipReveal({ as = 'div', className, from, scale = 1, duration = 
         {children}
       </Inner>
     </motion.div>
+  )
+}
+
+/** Paragraph whose words light up one by one as it scrolls through the viewport. */
+export function ScrollWords({ text, className }) {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.5'] })
+  const words = text.split(' ')
+  return (
+    <p ref={ref} className={className} aria-label={text}>
+      {words.map((w, i) => (
+        <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
+          {w}
+        </Word>
+      ))}
+    </p>
+  )
+}
+
+function Word({ children, progress, range }) {
+  const opacity = useTransform(progress, range, [0.18, 1])
+  return (
+    <motion.span aria-hidden style={{ opacity }}>
+      {children}{' '}
+    </motion.span>
   )
 }
