@@ -78,3 +78,23 @@ export function SectionHead({ eyebrow, children }) {
     </>
   )
 }
+
+/** Clip-path reveal on scroll.
+ *  The in-view trigger sits on an unclipped wrapper: an element that starts
+ *  fully clipped is never reported as visible on some (mobile) browsers. */
+export function ClipReveal({ as = 'div', className, from, scale = 1, duration = 1.2, children }) {
+  const Inner = motion[as]
+  return (
+    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }}>
+      <Inner
+        className={className}
+        variants={{
+          hidden: { clipPath: from, scale },
+          show: { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, transition: { duration, ease: [0.7, 0, 0.2, 1] } },
+        }}
+      >
+        {children}
+      </Inner>
+    </motion.div>
+  )
+}

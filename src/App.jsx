@@ -4,6 +4,7 @@ import Loader from './components/Loader'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
+import Slider from './components/Slider'
 import { About, Music, Credits, Beyond, Philosophy, Live } from './components/Sections'
 import Contact, { Footer } from './components/Contact'
 import { Release, Press, Gallery } from './components/Extra'
@@ -32,6 +33,7 @@ export default function App() {
       <main>
         <Hero />
         <Marquee items={['Marathi', 'मराठी हिप-हॉप', 'Hindi', 'हिंदी रैप', 'English', 'Storytelling', 'शब्द · आवाज · कथा']} />
+        <Slider />
         <About />
         <Music />
         <Release />

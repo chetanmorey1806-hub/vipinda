@@ -132,3 +132,14 @@ export const GALLERY = [
   { src: '/images/nagsen-festival.jpg', alt: 'Honoured at Nagsen Festival' },
   { src: '/images/crowd-clap.jpg', alt: 'Vipin in the audience at an event', tall: true },
 ]
+
+// Photo slider — `pos` sets the crop focus (object-position) for each photo
+export const SLIDES = [
+  { src: '/images/stage-red.jpg', kicker: 'Live', title: 'Live & Loud', text: 'Under the lights, every verse hits harder.', pos: '50% 28%' },
+  { src: '/images/mic-bw.jpg', kicker: 'The Craft', title: 'Every Word Counts', text: 'Research-driven writing, delivered raw.', pos: '62% 40%' },
+  { src: '/images/crew.jpg', kicker: 'The Crew', title: 'Rooted Together', text: 'Underground energy from Maharashtra.', pos: '50% 30%' },
+  { src: '/images/stage-nyf.jpg', kicker: 'Stage', title: 'Voice of the Youth', text: 'Taking Marathi hip-hop to bigger stages.', pos: '50% 22%' },
+  { src: '/images/stage-blue.jpg', kicker: 'Performance', title: 'Raw Expression', text: 'Cinematic performance, real emotion.', pos: '55% 35%' },
+  { src: '/images/stage-white.jpg', kicker: 'On the Mic', title: 'Let the Art Speak', text: 'Meaning over trends. Always.', pos: '50% 25%' },
+  { src: '/images/nagsen-festival.jpg', kicker: 'Recognition', title: 'Honoured', text: 'Recognised at Nagsen Festival.', pos: '50% 40%' },
+]

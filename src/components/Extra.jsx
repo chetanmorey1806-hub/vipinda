@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Reveal, SplitWords, SectionHead } from './Reveal'
+import { Reveal, SplitWords, SectionHead, ClipReveal } from './Reveal'
 import { CONTACT, PRESS, GALLERY } from '../data'
 
 /* ───────────────── LATEST RELEASE ───────────────── */
@@ -8,18 +8,12 @@ export function Release() {
   return (
     <section id="release" className="release">
       <div className="container release-grid">
-        <motion.div
-          className="poster"
-          initial={{ clipPath: 'inset(100% 0 0 0)', scale: 1.1 }}
-          whileInView={{ clipPath: 'inset(0% 0 0 0)', scale: 1 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 1.3, ease: [0.7, 0, 0.2, 1] }}
-        >
-          <img src="/images/release-poster.jpg" alt="Latest release poster — Raptoli presents, rapper Vipin Tatad VIP" loading="lazy" />
+        <ClipReveal className="poster" from="inset(100% 0% 0% 0%)" scale={1.1} duration={1.3}>
+          <img src="/images/release-poster.jpg" alt="Latest release poster — Raptoli presents, rapper Vipin Tatad VIP" />
           <span className="poster-badge">
             <span className="dot" /> Out Now
           </span>
-        </motion.div>
+        </ClipReveal>
 
         <div>
           <SectionHead eyebrow="Latest Release">

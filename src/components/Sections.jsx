@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Reveal, SplitWords, Counter, SectionHead } from './Reveal'
+import { Reveal, SplitWords, Counter, SectionHead, ClipReveal } from './Reveal'
 import { LANGUAGES, GENRES, CREDITS, BEYOND, COLLABS } from '../data'
 
 /* ───────────────── ABOUT ───────────────── */
@@ -42,16 +42,10 @@ export function About() {
           </div>
 
           <div>
-            <motion.figure
-              className="about-photo"
-              initial={{ clipPath: 'inset(0 100% 0 0)' }}
-              whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 1.2, ease: [0.7, 0, 0.2, 1] }}
-            >
-              <img src="/images/portrait-bw.jpg" alt="Portrait of Vipin Tatad" loading="lazy" />
+            <ClipReveal as="figure" className="about-photo" from="inset(0% 100% 0% 0%)">
+              <img src="/images/portrait-bw.jpg" alt="Portrait of Vipin Tatad" />
               <figcaption>Independent · Underground · Maharashtra</figcaption>
-            </motion.figure>
+            </ClipReveal>
             <Reveal className="stats">
               <div className="stat">
                 <Counter to={3} />
