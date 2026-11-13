@@ -12,6 +12,7 @@ import { useLang, markIntroDone } from './i18n'
 import { WhatsAppFab } from './components/WhatsApp'
 import { Cursor, useMagnetic } from './components/FX'
 import Admin, { useAdminRoute } from './components/Admin'
+import { MobileDock, SideDots, Toast } from './components/Dock'
 
 export default function App() {
   const { t, lang } = useLang()
@@ -41,6 +42,9 @@ export default function App() {
       <Navbar />
       <AnimatePresence>{adminOpen && <Admin key="admin" onClose={closeAdmin} />}</AnimatePresence>
       <WhatsAppFab />
+      <MobileDock />
+      <SideDots />
+      <Toast />
       {/* remount on language change so every text animation replays in the new language */}
       <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <main>

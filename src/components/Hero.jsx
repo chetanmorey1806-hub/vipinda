@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import { useFinePointer } from './FX'
+import { ShareButton } from './Dock'
 import { SLIDES } from '../data'
 import { useLang, getIntroDelay } from '../i18n'
 
@@ -165,6 +166,7 @@ export default function Hero() {
           <a href="#contact" className="btn">
             {t.hero.cta2}
           </a>
+          <ShareButton />
         </motion.div>
       </motion.div>
 

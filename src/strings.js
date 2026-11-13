@@ -11,7 +11,7 @@ export const LANGS = [
 ]
 
 const en = {
-  nav: { about: 'About', music: 'Music', credits: 'Credits', press: 'Press', gallery: 'Gallery', philosophy: 'Philosophy', contact: 'Contact' },
+  nav: { home: 'Home', about: 'About', music: 'Music', credits: 'Credits', press: 'Press', gallery: 'Gallery', philosophy: 'Philosophy', contact: 'Contact' },
   hero: {
     location: 'Maharashtra, India',
     aka: 'aka VIP',
@@ -191,6 +191,7 @@ const en = {
         .filter((l) => l !== null)
         .join('\n'),
   },
+  share: { label: 'Share', copied: 'Link copied!', text: 'Vipin Tatad — multilingual rapper, writer & storyteller from Maharashtra' },
   footer: {
     tag: 'Independent Voice · Cultural Identity · Global Vision',
     rights: 'All rights reserved.',
@@ -205,7 +206,7 @@ const en = {
 }
 
 const hi = {
-  nav: { about: 'परिचय', music: 'संगीत', credits: 'क्रेडिट्स', press: 'प्रेस', gallery: 'गैलरी', philosophy: 'विचार', contact: 'संपर्क' },
+  nav: { home: 'होम', about: 'परिचय', music: 'संगीत', credits: 'क्रेडिट्स', press: 'प्रेस', gallery: 'गैलरी', philosophy: 'विचार', contact: 'संपर्क' },
   hero: {
     location: 'महाराष्ट्र, भारत',
     aka: 'उर्फ़ VIP',
@@ -385,6 +386,7 @@ const hi = {
         .filter((l) => l !== null)
         .join('\n'),
   },
+  share: { label: 'शेयर', copied: 'लिंक कॉपी हो गया!', text: 'Vipin Tatad — महाराष्ट्र के बहुभाषी रैपर, लेखक और कथाकार' },
   footer: {
     tag: 'स्वतंत्र आवाज़ · सांस्कृतिक पहचान · वैश्विक दृष्टि',
     rights: 'सर्वाधिकार सुरक्षित।',
@@ -399,7 +401,7 @@ const hi = {
 }
 
 const mr = {
-  nav: { about: 'परिचय', music: 'संगीत', credits: 'क्रेडिट्स', press: 'प्रेस', gallery: 'गॅलरी', philosophy: 'विचार', contact: 'संपर्क' },
+  nav: { home: 'होम', about: 'परिचय', music: 'संगीत', credits: 'क्रेडिट्स', press: 'प्रेस', gallery: 'गॅलरी', philosophy: 'विचार', contact: 'संपर्क' },
   hero: {
     location: 'महाराष्ट्र, भारत',
     aka: 'उर्फ VIP',
@@ -579,6 +581,7 @@ const mr = {
         .filter((l) => l !== null)
         .join('\n'),
   },
+  share: { label: 'शेअर', copied: 'लिंक कॉपी झाली!', text: 'Vipin Tatad — महाराष्ट्रातील बहुभाषिक रॅपर, लेखक आणि कथाकार' },
   footer: {
     tag: 'स्वतंत्र आवाज · सांस्कृतिक ओळख · जागतिक दृष्टी',
     rights: 'सर्व हक्क राखीव.',

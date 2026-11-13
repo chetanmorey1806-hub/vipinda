@@ -68,11 +68,48 @@ export function Counter({ to, suffix = '' }) {
   )
 }
 
+const GLYPHS = '!<>-_\\/[]{}=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+/** Latin text "decodes" from random glyphs when it scrolls into view.
+ *  Devanagari (or reduced motion) is shown as-is — scrambled conjuncts look broken. */
+export function Scramble({ text, className, duration = 900 }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+  const latin = /^[\x20-\x7E·—–’]+$/.test(text)
+  const [out, setOut] = useState(latin ? text.replace(/[^ ]/g, '\u00A0') : text)
+  useEffect(() => {
+    if (!inView || !latin || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setOut(text)
+      return
+    }
+    let raf
+    const start = performance.now()
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / duration)
+      const done = Math.floor(p * text.length)
+      setOut(
+        text
+          .split('')
+          .map((c, i) => (i < done || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0]))
+          .join('')
+      )
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [inView, text, latin, duration])
+  return (
+    <span ref={ref} className={className} aria-label={text}>
+      <span aria-hidden>{out}</span>
+    </span>
+  )
+}
+
 export function SectionHead({ eyebrow, children }) {
   return (
     <>
       <Reveal>
-        <span className="eyebrow">{eyebrow}</span>
+        <Scramble className="eyebrow" text={eyebrow} />
       </Reveal>
       <h2 className="h2">{children}</h2>
     </>

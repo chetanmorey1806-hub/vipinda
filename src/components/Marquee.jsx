@@ -1,4 +1,33 @@
+import { useRef } from 'react'
+import { motion, useAnimationFrame, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion'
+
+const wrap = (min, max, v) => {
+  const r = max - min
+  return ((((v - min) % r) + r) % r) + min
+}
+
+/** Marquee that reacts to scrolling: faster + skewed while you scroll, flips direction when you scroll up. */
 export default function Marquee({ items, variant = '', speed = 30 }) {
+  const reduce = useReducedMotion()
+  const base = useMotionValue(0)
+  const { scrollY } = useScroll()
+  const vel = useSpring(useVelocity(scrollY), { damping: 50, stiffness: 400 })
+  const boost = useTransform(vel, [-2500, 0, 2500], [-4, 0, 4], { clamp: false })
+  const skew = useTransform(vel, [-3000, 0, 3000], [8, 0, -8])
+  const dir = useRef(variant.includes('reverse') ? 1 : -1)
+  const x = useTransform(base, (v) => `${wrap(-50, 0, v)}%`)
+
+  // 50% of the track (one full row) every `speed` seconds at rest
+  useAnimationFrame((_, delta) => {
+    const b = boost.get()
+    if (!reduce) {
+      if (b < -0.05) dir.current = variant.includes('reverse') ? -1 : 1
+      else if (b > 0.05) dir.current = variant.includes('reverse') ? 1 : -1
+    }
+    const factor = reduce ? 0.4 : 1 + Math.abs(b)
+    base.set(base.get() + dir.current * (50 / speed) * (delta / 1000) * factor)
+  })
+
   const row = (
     <div className="marquee-item" aria-hidden>
       {items.map((t, i) => (
@@ -11,10 +40,10 @@ export default function Marquee({ items, variant = '', speed = 30 }) {
   )
   return (
     <div className={`marquee ${variant}`}>
-      <div className="marquee-track" style={{ animationDuration: `${speed}s` }}>
+      <motion.div className="marquee-track" style={{ x, skewX: reduce ? 0 : skew }}>
         {row}
         {row}
-      </div>
+      </motion.div>
     </div>
   )
 }
