@@ -3,15 +3,15 @@ import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'fra
 import { SLIDES } from '../data'
 import { useLang, getIntroDelay } from '../i18n'
 
-const SLIDE_TIME = 5.5 // seconds per photo
+const SLIDE_TIME = 2 // seconds per photo
 const ease = [0.7, 0, 0.2, 1]
 const pad = (n) => String(n).padStart(2, '0')
 
 // direction-aware wipe: the new photo is revealed from the side it comes from
 const wipe = {
   enter: (dir) => ({ clipPath: dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)', zIndex: 2 }),
-  center: { clipPath: 'inset(0% 0% 0% 0%)', zIndex: 2, transition: { duration: 1.1, ease } },
-  exit: { zIndex: 1, transition: { duration: 1.1 } },
+  center: { clipPath: 'inset(0% 0% 0% 0%)', zIndex: 2, transition: { duration: 0.8, ease } },
+  exit: { zIndex: 1, transition: { duration: 0.8 } },
 }
 
 function Chars({ text, delay }) {
@@ -85,7 +85,7 @@ export default function Hero() {
                 alt={cap.title}
                 draggable={false}
                 style={{ objectPosition: SLIDES[slide].pos }}
-                initial={{ scale: 1.22, x: dir > 0 ? '3%' : '-3%' }}
+                initial={{ scale: 1.14, x: dir > 0 ? '2%' : '-2%' }}
                 animate={{ scale: 1.04, x: '0%' }}
                 transition={{ duration: SLIDE_TIME + 1.5, ease: 'easeOut' }}
                 fetchpriority={slide === 0 ? 'high' : 'auto'}

@@ -1102,45 +1102,6 @@ section {
   color: var(--accent);
 }
 
-/* ── footer ───────────────────────── */
-.footer {
-  padding: 64px 0 32px;
-  overflow: hidden;
-}
-.footer-big {
-  font-family: var(--display);
-  font-size: clamp(4rem, 21vw, 19rem);
-  line-height: 0.85;
-  text-transform: uppercase;
-  white-space: nowrap;
-  text-align: center;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(var(--text-rgb), 0.25);
-}
-.footer-row {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  font-size: 0.85rem;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  padding-top: 24px;
-}
-.footer-row b {
-  color: var(--text);
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-.to-top {
-  color: var(--text);
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-}
-
 /* ── responsive ───────────────────────── */
 @media (max-width: 960px) {
   .nav-links { display: none; }
@@ -1175,7 +1136,6 @@ section {
   .credit .bg-num { font-size: 11rem; }
   .stat { padding: 22px 18px; }
   .scroll-cue { display: none; }
-  .footer-row { flex-direction: column; }
 }
 
 
@@ -1682,4 +1642,290 @@ html[lang='mr'] .lead,
 html[lang='hi'] .muted,
 html[lang='mr'] .muted {
   line-height: 1.75;
+}
+
+/* rotated accent marquee pokes past the viewport — clip it (clip, unlike hidden, also blocks programmatic sideways scroll) */
+html,
+body,
+main {
+  overflow-x: clip;
+}
+
+/* rotating role word needs room for Devanagari vowel marks */
+html[lang='hi'] .rotator,
+html[lang='mr'] .rotator {
+  height: 1.9em;
+  align-items: center;
+}
+
+/* keep hero copy readable over the photo slider on small screens */
+@media (max-width: 960px) {
+  .hero-tagline,
+  .hero-roles,
+  .hero-top {
+    text-shadow: 0 1px 14px rgba(var(--bg-rgb), 0.95), 0 0 2px rgba(var(--bg-rgb), 0.6);
+  }
+  .hero-tagline { color: var(--text); }
+}
+
+/* ── footer ───────────────────────── */
+.footer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(72px, 10vw, 120px) 0 28px;
+  background: var(--bg-2);
+  isolation: isolate;
+}
+.footer-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+}
+.footer-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(520px circle at var(--fx, 70%) var(--fy, 30%), rgba(255, 106, 26, 0.14), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.footer:hover .footer-glow { opacity: 1; }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
+  gap: clamp(32px, 4vw, 56px);
+}
+.f-logo { font-size: 2.6rem; }
+.f-blurb {
+  margin-top: 14px;
+  color: var(--muted);
+  max-width: 32ch;
+}
+.f-avail {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  animation: livepulse 1.8s infinite;
+}
+@keyframes livepulse {
+  70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.f-col h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.f-col ul { list-style: none; }
+.f-nav {
+  display: grid;
+  gap: 6px;
+}
+.f-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 3px 0;
+  position: relative;
+}
+.f-link small {
+  font-size: 0.68rem;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.f-link span {
+  position: relative;
+  font-weight: 500;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
+}
+.f-link span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s ease;
+}
+.f-link:hover span { transform: translateX(6px); color: var(--accent); }
+.f-link:hover span::after { transform: scaleX(1); transform-origin: left; }
+.f-link:hover small { color: var(--accent); }
+
+.f-socials {
+  display: grid;
+  gap: 10px;
+}
+.f-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+.f-ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  transition: background 0.35s, color 0.35s, border-color 0.35s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f-ic svg { width: 17px; height: 17px; }
+.f-social i {
+  font-style: normal;
+  opacity: 0;
+  transform: translate(-6px, 6px);
+  transition: opacity 0.3s, transform 0.3s;
+  color: var(--accent);
+}
+.f-social:hover .f-ic {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  transform: rotate(-12deg) scale(1.08);
+}
+.f-social:hover i { opacity: 1; transform: translate(0, 0); }
+
+.f-mail {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  line-height: 1.2;
+  word-break: break-all;
+  background: linear-gradient(var(--accent), var(--accent)) left bottom / 0% 2px no-repeat;
+  transition: background-size 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s;
+  padding-bottom: 4px;
+}
+.f-mail:hover { background-size: 100% 2px; color: var(--accent); }
+.f-loc {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.f-cta {
+  margin-top: 24px;
+  padding: 13px 20px;
+  font-size: 0.75rem;
+}
+
+.footer-name {
+  position: relative;
+  margin: clamp(48px, 8vw, 96px) 0 0;
+  font-family: var(--display);
+  font-size: clamp(4.2rem, 19.5vw, 19rem);
+  line-height: 0.82;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
+}
+.fn-text {
+  display: inline-block;
+  /* full line box so the clipped background covers the whole glyph height */
+  line-height: 1.02;
+  padding: 0.02em 0.04em;
+  margin: -0.1em 0;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(var(--text-rgb), 0.3);
+  background-image: linear-gradient(90deg, var(--accent) 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: -webkit-text-stroke-color 0.4s;
+}
+.footer-name:hover .fn-text { -webkit-text-stroke-color: var(--accent); }
+
+.footer-bottom {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 28px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.footer-bottom b {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+.to-top-ring {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+}
+.to-top-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: spin 14s linear infinite;
+}
+.to-top-ring text {
+  fill: currentColor;
+  font-family: 'Space Grotesk', 'Mukta', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+.ring-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.to-top-ring:hover .ring-arrow { transform: translateY(-5px) scale(1.08); }
+.to-top-ring:hover svg { animation-duration: 4s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 960px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+  .f-nav { grid-template-columns: 1fr 1fr; }
+  .f-socials { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .to-top-ring { position: absolute; right: var(--gutter); bottom: 28px; width: 76px; height: 76px; }
+  .footer-bottom { position: relative; padding-right: 90px; }
 }

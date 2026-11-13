@@ -161,7 +161,13 @@ const en = {
   footer: {
     tag: 'Independent Voice · Cultural Identity · Global Vision',
     rights: 'All rights reserved.',
-    top: 'Back to top ↑',
+    top: 'Back to top',
+    blurb: 'Multilingual rapper, writer and audio-visual storyteller from Maharashtra.',
+    available: 'Available for bookings & collaborations',
+    navTitle: 'Navigate',
+    connectTitle: 'Connect',
+    contactTitle: 'Get in touch',
+    ring: 'BACK TO TOP • VIPIN TATAD • ',
   },
 }
 
@@ -316,7 +322,13 @@ const hi = {
   footer: {
     tag: 'स्वतंत्र आवाज़ · सांस्कृतिक पहचान · वैश्विक दृष्टि',
     rights: 'सर्वाधिकार सुरक्षित।',
-    top: 'ऊपर जाएँ ↑',
+    top: 'ऊपर जाएँ',
+    blurb: 'महाराष्ट्र के बहुभाषी रैपर, लेखक और ऑडियो-विज़ुअल कथाकार।',
+    available: 'बुकिंग और सहयोग के लिए उपलब्ध',
+    navTitle: 'पेज',
+    connectTitle: 'जुड़ें',
+    contactTitle: 'संपर्क करें',
+    ring: 'ऊपर जाएँ • VIPIN TATAD • ',
   },
 }
 
@@ -471,7 +483,13 @@ const mr = {
   footer: {
     tag: 'स्वतंत्र आवाज · सांस्कृतिक ओळख · जागतिक दृष्टी',
     rights: 'सर्व हक्क राखीव.',
-    top: 'वर जा ↑',
+    top: 'वर जा',
+    blurb: 'महाराष्ट्रातील बहुभाषिक रॅपर, लेखक आणि दृकश्राव्य कथाकार.',
+    available: 'बुकिंग व सहयोगासाठी उपलब्ध',
+    navTitle: 'पाने',
+    connectTitle: 'जोडले राहा',
+    contactTitle: 'संपर्क साधा',
+    ring: 'वर जा • VIPIN TATAD • ',
   },
 }
 

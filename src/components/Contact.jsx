@@ -3,7 +3,7 @@ import { Reveal, SplitWords } from './Reveal'
 import { CONTACT } from '../data'
 import { useLang } from '../i18n'
 
-const icons = {
+export const icons = {
   Instagram: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4.5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg>
   ),
@@ -72,29 +72,5 @@ export default function Contact() {
         </div>
       </div>
     </section>
-  )
-}
-
-export function Footer() {
-  const { t } = useLang()
-  return (
-    <footer className="footer">
-      <div className="container">
-        <motion.div
-          className="footer-big"
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Vipin Tatad
-        </motion.div>
-        <div className="footer-row">
-          <b>{t.footer.tag}</b>
-          <span>© {new Date().getFullYear()} Vipin Tatad. {t.footer.rights}</span>
-          <a href="#top" className="to-top">{t.footer.top}</a>
-        </div>
-      </div>
-    </footer>
   )
 }
